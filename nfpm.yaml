@@ -11,7 +11,7 @@ provides:
 - srl-snmp-traps
 maintainer: "Karim Radhouani <karim.radhouani@nokia.com>"
 description: |
-  "SRL SNMP Server"
+  "SRL SNMP Traps"
 vendor: "Nokia"
 license: "BSD 2"
 contents:

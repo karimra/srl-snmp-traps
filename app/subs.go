@@ -17,6 +17,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/vishvananda/netns"
 	"golang.org/x/sync/semaphore"
+	"google.golang.org/protobuf/encoding/prototext"
 )
 
 const (
@@ -28,16 +29,23 @@ func (a *app) StartSubscriptions(ctx context.Context) {
 		api.EncodingASCII(),
 		api.SubscriptionListModeSTREAM(),
 	}
-	subGNMIOpts := []api.GNMIOption{api.SubscriptionModeON_CHANGE()}
+
 	for _, p := range a.getTriggersPaths() {
-		subGNMIOpts = append(subGNMIOpts, api.Path(p))
+		opts = append(opts,
+			api.Subscription(
+				api.SubscriptionModeON_CHANGE(),
+				api.Path(p),
+			),
+		)
 	}
-	opts = append(opts, api.Subscription(subGNMIOpts...))
+
 	subscribeRequest, err := api.NewSubscribeRequest(opts...)
 	if err != nil {
 		log.Errorf("failed to create a subscription request: %v", err)
 		return
 	}
+
+	log.Debugf("\n%s", prototext.Format(subscribeRequest))
 
 SUB:
 	nctx, cancel := context.WithCancel(ctx)
