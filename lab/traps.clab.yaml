@@ -1,0 +1,18 @@
+name: traps
+
+topology:
+  defaults:
+    kind: srl
+  kinds:
+    srl:
+      image: ghcr.io/nokia/srlinux:latest
+      binds:
+        - rpm:/tmp/rpm:ro
+
+  nodes:
+    srl1:
+    srl2:
+
+  links:
+    - endpoints: ["srl1:e1-1", "srl2:e1-1"]
+    - endpoints: ["srl1:e1-2", "srl2:e1-2"]

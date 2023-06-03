@@ -1,0 +1,17 @@
+snmp-traps:
+    run-as-user: root
+    path: /opt/srlinux/usr/bin/
+    launch-command: ./srl-snmp-traps -d
+    search-command: ./srl-snmp-traps
+    version-command: /opt/srlinux/usr/bin/srl-snmp-traps -v
+    wait-for-config: Yes
+    config-delivery-format: json
+    failure-threshold: 10
+    yang-modules:
+        names: 
+            - "snmp-traps"
+        source-directories:
+            - "/opt/snmp-traps/yang/"
+            - "/opt/srlinux/models/srl_nokia/models/common"
+            - "/opt/srlinux/models/srl_nokia/models/network-instance"
+            - "/opt/srlinux/models/srl_nokia/models/system"

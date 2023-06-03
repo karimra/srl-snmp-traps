@@ -1,0 +1,4 @@
+clab-*
+lab/.*
+lab/rpm
+builds

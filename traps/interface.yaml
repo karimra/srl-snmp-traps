@@ -1,0 +1,78 @@
+# trap definition name
+# mainly used for logging
+name: interface_oper_state
+
+# trigger defines which gNMI path triggers
+# the trap generation.
+trigger:
+  # keyless gNMI path
+  path: /interface/oper-state
+  # publish defines a list of variables to be
+  # built from the message that triggered the trap
+  # and published to be used in 'tasks' and/or
+  # in the trap PDU section
+  publish:
+    - if_name: .tags.interface_name
+    - oper_state: |
+        if (.values."/interface/oper-state" == "up") 
+        then 1 
+        else 2 
+        end
+
+# tasks defines a list of tasks to run sequentially.
+# The goal is to retrieve extra variables from SRL gNMI server
+# to enrich the trap variables.
+# Each task can publish one or more variables.
+tasks:
+  - name: get_if_index
+    gnmi:
+      rpc: get
+      path: '"/interface[name=" + $if_name + "]/ifindex"'
+      encoding: ascii
+    publish:
+      - ifindex: '.values."/interface/ifindex"'
+
+  - name: get_hostname
+    gnmi:
+      rpc: get
+      path: '"/system/name/host-name"'
+      encoding: ascii
+    publish:
+      - hostname: '.values."/system/name/host-name"'
+
+  - name: get_admin_state
+    gnmi:
+      rpc: get
+      path: '"/interface[name="+ $if_name +"]/admin-state"'
+      encoding: ascii
+    publish:
+      - admin_state: |
+          if (.values."/interface/admin-state" == "enable") 
+          then 1 
+          else 2 
+          end
+
+# trap describes the actual trap being generated
+trap:
+  # inform specifies if the generated trap is an inform PDU
+  inform: false
+  # community allows to customize the community string
+  # in the trap PDU.
+  # if empty the community configured on the node under 
+  # /system/snmp-traps/destination[name=*]/community is used.
+  community: '"dummy"'
+  # bindings define the list of variables to be added 
+  # to the trap.
+  # the app will add the OID 1.3.6.1.2.1.1.3.0 (sysUptime)
+  # as first OID. It will has as value the uptime of the app
+  # not SRL's.
+  bindings:
+    - oid: '".1.3.6.1.2.1.2.2.1.8."+ $ifindex'
+      type: int
+      value: $oper_state
+    - oid: '".1.3.6.1.2.1.1.5"'
+      type: octetString
+      value: $hostname
+    - oid: '".1.3.6.1.2.1.2.2.1.7."+ $ifindex'
+      type: int
+      value: $admin_state

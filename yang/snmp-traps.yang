@@ -1,0 +1,78 @@
+module snmp-traps {
+    yang-version "1.1";
+
+    // namespace
+    namespace "urn:srl_sdk_apps/snmp-traps";
+    prefix "srl_sdk_apps-snmp-traps";
+
+    import srl_nokia-common {
+        prefix srl-comm;
+    }
+    import srl_nokia-system {
+        prefix srl-system;
+    }
+    import srl_nokia-network-instance {
+        prefix srl-netinst;
+    }
+    import srl_nokia-extensions {
+        prefix srl-ext;
+    }
+
+    // description
+    description
+        "This module defines configuration and operational state data related to the SRLinux snmp-traps application.";
+
+    // revision(s)
+    revision "2023-02-08" {
+        description
+          "snmp-traps 0.1.0";
+    }
+    grouping snmp-traps-top {
+        container snmp-traps {
+            list destination {
+                description
+                    "Trap destination, an SNMP trap listener";
+                max-elements 16;
+                key "address";
+                leaf address {
+                    type string;
+                    description "IP Address and port number of an SNMP Trap listener";
+                }
+                leaf community {
+                    // type srl-comm:name {
+                    //     srl-ext:generated-class-name "SecretKey";
+                    // }
+                    type string;
+                }
+                leaf version {
+                    type enumeration {
+                        enum v2c;
+                        enum v3;
+                    }
+                    description "SNMP version, v2c or v3";
+                    default "v2c";
+                }
+                leaf network-instance {
+                    type leafref {
+                        path "/srl-netinst:network-instance/srl-netinst:name";
+                    }
+                    must 'not(/srl-netinst:network-instance[srl-netinst:name=current()]/srl-netinst:type = "srl-netinst:mac-vrf")' {
+                        error-message "A snmp-server server cannot be started in a network-instance of type 'mac-vrf'";
+                    }
+                    description
+                        "Reference to a configured network instance";
+                    default "mgmt";
+                }
+                leaf admin-state {
+                    type srl-comm:admin-state;
+                    default "disable";
+                    srl-ext:show-importance high;
+                    description "Administrative state of the SNMP trap destination.";
+                }
+            } // list destination
+        } // container snmp-traps
+    } // grouping snmp-traps-top
+    augment "/srl-system:system" {
+        uses snmp-traps-top;
+    }
+}
