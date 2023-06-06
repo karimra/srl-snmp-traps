@@ -1,5 +1,5 @@
 # trap definition name
-# mainly used for logging
+# used mainly for logging
 name: subinterface_oper_state
 
 # trigger defines which gNMI path triggers

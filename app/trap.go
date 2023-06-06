@@ -20,10 +20,12 @@ type trapDefinition struct {
 }
 
 type trigger struct {
-	Path    string              `yaml:"path,omitempty"`
-	Publish []map[string]string `yaml:"publish,omitempty"`
+	Path      string              `yaml:"path,omitempty"`
+	Condition string              `yaml:"condition,omitempty"`
+	Publish   []map[string]string `yaml:"publish,omitempty"`
 
-	publishCode []map[string]*gojq.Code
+	conditionCode *gojq.Code
+	publishCode   []map[string]*gojq.Code
 }
 
 type task struct {
@@ -152,6 +154,13 @@ func (t *trapDefinition) parseCode() error {
 }
 
 func (tr *trigger) parseCode() error {
+	var err error
+	if tr.Condition != "" {
+		tr.conditionCode, err = parseJQ(tr.Condition)
+		if err != nil {
+			return err
+		}
+	}
 	tr.publishCode = make([]map[string]*gojq.Code, 0, len(tr.Publish))
 	for _, mkv := range tr.Publish {
 		for k, v := range mkv {

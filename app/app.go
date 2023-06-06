@@ -129,20 +129,22 @@ START:
 	}
 
 	//
-	cfgStream := a.agent.StartConfigNotificationStream(ctx)
 	nwInstStream := a.agent.StartNwInstNotificationStream(ctx)
+	cfgStream := a.agent.StartConfigNotificationStream(ctx)
 	go a.updateTelemetryCh(ctx)
 	go a.StartSubscriptions(ctx)
 	for {
 		select {
 		case nwInstEvent := <-nwInstStream:
 			log.Debugf("NwInst notification: %+v", nwInstEvent)
-			b, err := prototext.MarshalOptions{Multiline: true, Indent: "  "}.Marshal(nwInstEvent)
-			if err != nil {
-				log.Errorf("NwInst notification Marshal failed: %+v", err)
-				continue
+			if log.GetLevel() > log.DebugLevel {
+				b, err := prototext.MarshalOptions{Multiline: true, Indent: "  "}.Marshal(nwInstEvent)
+				if err != nil {
+					log.Errorf("NwInst notification Marshal failed: %+v", err)
+					continue
+				}
+				log.Debugf("NwInst event:\n%s", string(b))
 			}
-			log.Debugf("NwInst event JSON:\n%s", string(b))
 			for _, ev := range nwInstEvent.GetNotification() {
 				if nwInst := ev.GetNwInst(); nwInst != nil {
 					a.handleNwInstCfg(ctx, nwInst)
@@ -152,12 +154,14 @@ START:
 			}
 		case event := <-cfgStream:
 			log.Infof("Config notification: %+v", event)
-			b, err := prototext.MarshalOptions{Multiline: true, Indent: "  "}.Marshal(event)
-			if err != nil {
-				log.Infof("Config notification Marshal failed: %+v", err)
-				continue
+			if log.GetLevel() > log.DebugLevel {
+				b, err := prototext.MarshalOptions{Multiline: true, Indent: "  "}.Marshal(event)
+				if err != nil {
+					log.Infof("Config notification Marshal failed: %+v", err)
+					continue
+				}
+				log.Debugf("config event:\n%s", string(b))
 			}
-			fmt.Printf("%s\n", string(b))
 			for _, ev := range event.GetNotification() {
 				if cfg := ev.GetConfig(); cfg != nil {
 					a.handleConfigEvent(ctx, cfg)
@@ -181,10 +185,11 @@ func (a *app) handleNwInstCfg(ctx context.Context, nwInst *ndk.NetworkInstanceNo
 	defer a.config.m.Unlock()
 	switch nwInst.Op {
 	case ndk.SdkMgrOperation_Create:
-		a.config.nwInst[key.InstName] = nwInst.Data
+		a.config.nwInst[key.GetInstName()] = nwInst.Data
 	case ndk.SdkMgrOperation_Update:
-		a.config.nwInst[key.InstName] = nwInst.Data
+		a.config.nwInst[key.GetInstName()] = nwInst.Data
 	case ndk.SdkMgrOperation_Delete:
+		delete(a.config.nwInst, key.GetInstName())
 	}
 }
 
@@ -266,7 +271,7 @@ func (a *app) handleCfgSnmpTrapDestinationUpdate(ctx context.Context, cfg *ndk.C
 		log.Errorf("failed to unmarshal config data from path %s: %v", cfg.Key.JsPath, err)
 		return
 	}
-	log.Infof("got SNMP trap destination config: %#v", destinationConfig)
+	log.Infof("got SNMP trap destination config: %v", destinationConfig)
 	if _, ok := a.config.nwInst[destinationConfig.NetworkInstance]; !ok {
 		log.Errorf("unknown network-instance %s", destinationConfig.NetworkInstance)
 		return
