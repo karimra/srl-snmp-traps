@@ -45,7 +45,7 @@ func (a *app) StartSubscriptions(ctx context.Context) {
 		return
 	}
 
-	log.Debugf("\n%s", prototext.Format(subscribeRequest))
+	log.Debugf("subscribe request:\n%s", prototext.Format(subscribeRequest))
 
 SUB:
 	nctx, cancel := context.WithCancel(ctx)
@@ -93,9 +93,25 @@ func (a *app) handleSubscribeResponse(ctx context.Context, rsp *gnmi.SubscribeRe
 			if _, ok := ev.Values[t.Trigger.Path]; !ok {
 				continue
 			}
-			log.Infof("trap %q matched ev: %v", t.Name, ev)
+			input := ev.ToMap()
+			if t.Trigger.conditionCode != nil {
+				v, err := runJQ(t.Trigger.conditionCode, input)
+				if err != nil {
+					log.Errorf("trap %q: failed to evaluate trigger condition: %v", t.Name, err)
+					continue
+				}
+				vb, ok := v.(bool)
+				if !ok {
+					log.Errorf("trap %q: unexpected condition result type, wanted boolean, got %T", t.Name, v)
+					continue
+				}
+				if !vb {
+					continue
+				}
+			}
+			log.Debugf("event matched trap %q. event=%v", t.Name, ev)
 			// handle matched ev and trap
-			err = a.handleTrapSend(ctx, t, ev)
+			err = a.handleTrapSend(ctx, t, input)
 			if err != nil {
 				log.Errorf("failed to build and send trap: %v", err)
 			}
@@ -103,7 +119,7 @@ func (a *app) handleSubscribeResponse(ctx context.Context, rsp *gnmi.SubscribeRe
 	}
 }
 
-func (a *app) handleTrapSend(ctx context.Context, t *trapDefinition, ev *formatters.EventMsg) error {
+func (a *app) handleTrapSend(ctx context.Context, t *trapDefinition, input map[string]any) error {
 	pdus := make([]g.SnmpPDU, 0, len(t.TrapPDU.Bindings)+1)
 
 	// append systemUptime pdu
@@ -113,22 +129,18 @@ func (a *app) handleTrapSend(ctx context.Context, t *trapDefinition, ev *formatt
 		Value: uint32(time.Since(a.startTime).Seconds()),
 	})
 	// run trigger publish
-	varsVals, err := a.triggerPublish(t.Trigger, ev)
+	varsVals, err := a.triggerPublish(t.Trigger, input)
 	if err != nil {
 		return err
 	}
-	// fmt.Println("trigger published vars", varsVals)
-	// varsVals := make([]any, 0, len(tpb))
-	// varsVals = append(varsVals, tpb...)
-	// run tasks
-	// fmt.Println("trigger published vars", varsVals)
-	// taskVars := make([]any, 0, len(t.Trigger.publishCode))
+	log.Debugf("trap %q: trigger published vars: %v", t.Name, varsVals)
+
 	for _, tsk := range t.Tasks {
 		rs, err := tsk.run(ctx, a.tg, varsVals...)
 		if err != nil {
 			return err
 		}
-		// fmt.Printf("!! task %s var %#v\n", tsk.Name, rs)
+		log.Debugf("trap %q: task %q vars: %v", t.Name, tsk.Name, rs)
 		varsVals = append(varsVals, rs...)
 	}
 	//
@@ -144,6 +156,7 @@ func (a *app) handleTrapSend(ctx context.Context, t *trapDefinition, ev *formatt
 			return fmt.Errorf("resulting community string is not a string: %v", r)
 		}
 	}
+	log.Debugf("trap %q: community: %q", t.Name, trapCommunity)
 	// build trap PDU
 	for _, bind := range t.TrapPDU.Bindings {
 		oid, err := runJQ(bind.oidCode, nil, varsVals...)
@@ -170,15 +183,14 @@ func (a *app) handleTrapSend(ctx context.Context, t *trapDefinition, ev *formatt
 	// debug
 	if log.GetLevel() > log.DebugLevel {
 		b, _ := json.MarshalIndent(trapPDU.Variables, "", "  ")
-		log.Printf("trapPDU variables:\n%s", string(b))
+		log.Debugf("trapPDU variables:\n%s", string(b))
 	}
 	//
 	a.sendTrap(trapPDU, trapCommunity)
 	return nil
 }
 
-func (a *app) triggerPublish(t *trigger, ev *formatters.EventMsg) ([]any, error) {
-	input := ev.ToMap()
+func (a *app) triggerPublish(t *trigger, input map[string]interface{}) ([]any, error) {
 	rs := make([]any, 0, len(t.publishCode))
 	for _, mv := range t.publishCode {
 		for _, c := range mv {
@@ -263,12 +275,19 @@ func (a *app) sendTrap(trapPDU g.SnmpTrap, trapCommunity string) {
 			defer sem.Release(1)
 			// netwIns
 			var netInstName string
-			if netInst, ok := a.config.nwInst[dest.NetworkInstance]; ok {
-				netInstName = fmt.Sprintf("%s-%s", netInst.BaseName, dest.NetworkInstance)
-			} else {
+			a.config.m.RLock()
+			netInst, ok := a.config.nwInst[dest.NetworkInstance]
+			a.config.m.RUnlock()
+			if !ok {
 				log.Errorf("unknown network instance name: %s", dest.NetworkInstance)
 				return
 			}
+			if !netInst.OperIsUp {
+				log.Debugf("destination %q: network instance %q is not oper UP", dest.Address, dest.NetworkInstance)
+				return
+			}
+
+			netInstName = fmt.Sprintf("%s-%s", netInst.BaseName, dest.NetworkInstance)
 			n, err := netns.GetFromName(netInstName)
 			if err != nil {
 				log.Errorf("failed getting NS %q: %v", netInstName, err)

@@ -1,5 +1,5 @@
 # trap definition name
-# mainly used for logging
+# used mainly for logging
 name: interface_oper_state
 
 # trigger defines which gNMI path triggers
@@ -7,6 +7,13 @@ name: interface_oper_state
 trigger:
   # keyless gNMI path
   path: /interface/oper-state
+  
+  # condition is an optional attribute.
+  # it's a jq expression that must return a boolean result.
+  # it allows to filter in/out specific traps.
+  # if the condition is true the trap is triggered
+  # condition: '.tags.interface_name != mgmt0'
+  
   # publish defines a list of variables to be
   # built from the message that triggered the trap
   # and published to be used in 'tasks' and/or
