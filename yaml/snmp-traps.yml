@@ -1,9 +1,9 @@
 snmp-traps:
     run-as-user: root
-    path: /opt/srlinux/usr/bin/
-    launch-command: ./srl-snmp-traps -d
+    path: /usr/local/bin/
+    launch-command: ./srl-snmp-traps -d 
     search-command: ./srl-snmp-traps
-    version-command: /opt/srlinux/usr/bin/srl-snmp-traps -v
+    version-command: /usr/local/bin/srl-snmp-traps -v
     wait-for-config: Yes
     config-delivery-format: json
     failure-threshold: 10

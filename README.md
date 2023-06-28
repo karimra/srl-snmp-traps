@@ -36,7 +36,7 @@ gnmic -a clab-traps-srl1 -u admin -p NokiaSrl1! --skip-verify \
 
 ### traps definition
 
-Trap definitions are YAML files located under `/opt/srlinux/usr/bin/traps`
+Trap definitions are YAML files located under `/opt/snmp-traps/traps`
 
 example:
 
@@ -69,10 +69,10 @@ trigger:
         else 2 
         end
 
-# tasks defines a list of tasks to run sequentially.
-# The goal is to retrieve extra variables from SRL gNMI server
-# to enrich the trap variables.
-# Each task can publish one or more variables.
+# `tasks` defines a list of tasks to run sequentially.
+# The goal is to retrieve extra variables from the SRL gNMI server
+# to enrich the trap with extra attributes.
+# Each task can publish one or more attributes.
 tasks:
   - name: get_if_index
     gnmi:

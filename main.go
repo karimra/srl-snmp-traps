@@ -20,7 +20,7 @@ const (
 var version = "dev"
 
 func main() {
-	trapDir := flag.String("trap-dir", "./traps", "directory containing trap definition files")
+	trapDir := flag.String("trap-dir", "/opt/snmp-traps/traps", "directory containing trap definition files")
 	debug := flag.Bool("d", false, "turn on debug")
 	versionFlag := flag.Bool("v", false, "print version")
 	flag.Parse()
