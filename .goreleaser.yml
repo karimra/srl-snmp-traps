@@ -1,0 +1,49 @@
+project_name: srl-snmp-traps
+builds:
+  - env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w -X main.version={{.Version}}-{{.ShortCommit}}
+    goos:
+      - linux
+    goarch:
+      - amd64
+archives:
+  - replacements:
+      linux: Linux
+      amd64: x86_64
+checksum:
+  name_template: "checksums.txt"
+snapshot:
+  name_template: "{{ .Tag }}"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+nfpms:
+  - id: srl-snmp-traps
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    replacements:
+      amd64: x86_64
+      linux: Linux
+    vendor: Nokia
+    homepage: https://github.com/karimra/srl-snmp-traps
+    maintainer: Karim Radhouani <karim.radhouani@nokia.com>
+    description: "SR Linux SNMP Traps"
+    formats:
+      - rpm
+    license: "BSD 2"
+    bindir: /usr/local/bin/
+    contents:
+      - src: ./yang/snmp-traps.yang
+        dst: /opt/snmp-traps/yang/snmp-traps.yang
+      - src: ./yaml/snmp-traps.yml
+        dst: /etc/opt/srlinux/appmgr/snmp-traps.yml
+      - src: ./traps
+        dst: /opt/snmp-traps/traps
+    overrides:
+      rpm:
+        scripts:
