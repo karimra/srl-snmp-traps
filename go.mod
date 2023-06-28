@@ -9,7 +9,7 @@ require (
 	github.com/nokia/srlinux-ndk-go v0.1.1
 	github.com/openconfig/gnmi v0.9.1
 	github.com/openconfig/gnmic v0.31.0
-	github.com/sirupsen/logrus v1.9.2
+	github.com/sirupsen/logrus v1.9.3
 	github.com/vishvananda/netns v0.0.4
 	golang.org/x/sync v0.3.0
 	google.golang.org/grpc v1.56.1
