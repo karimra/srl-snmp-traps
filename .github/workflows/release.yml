@@ -1,0 +1,42 @@
+---
+name: release
+on:
+  push:
+    tags:
+      - v*
+env:
+  GOVER: 1.19.5
+  GORELEASER_VER: v0.180.3
+
+jobs:  
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GOVER }}
+      - run: go test -cover ./...
+        env:
+          CGO_ENABLED: 0
+
+  release:
+    runs-on: ubuntu-22.04
+    needs:
+      - test
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GOVER }}
+      - name: Configure git for private modules
+        env:
+          TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: git config --global url."https://karimra:${TOKEN}@github.com".insteadOf "https://github.com"
+      - name: Release with goreleaser
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          version: latest
+          args: release --clean -f .goreleaser.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
