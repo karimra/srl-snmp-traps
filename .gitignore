@@ -2,3 +2,4 @@ clab-*
 lab/.*
 lab/rpm
 builds
+dist/
