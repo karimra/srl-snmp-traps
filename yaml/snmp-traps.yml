@@ -5,13 +5,14 @@ snmp-traps:
     search-command: ./srl-snmp-traps
     version-command: /usr/local/bin/srl-snmp-traps -v
     wait-for-config: Yes
-    config-delivery-format: json
+    start-order: 100
     failure-threshold: 10
+    failure-action: 'wait=60'
     yang-modules:
         names: 
             - "snmp-traps"
         source-directories:
             - "/opt/snmp-traps/yang/"
-            - "/opt/srlinux/models/srl_nokia/models/common"
-            - "/opt/srlinux/models/srl_nokia/models/network-instance"
-            - "/opt/srlinux/models/srl_nokia/models/system"
+            - "/opt/srlinux/models/iana"
+            - "/opt/srlinux/models/ietf"
+            - "/opt/srlinux/models/srl_nokia/models"
