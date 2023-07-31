@@ -7,7 +7,7 @@ require (
 	github.com/itchyny/gojq v0.12.13
 	github.com/karimra/srl-ndk-demo v0.1.1
 	github.com/nokia/srlinux-ndk-go v0.1.1
-	github.com/openconfig/gnmi v0.9.1
+	github.com/openconfig/gnmi v0.10.0
 	github.com/openconfig/gnmic v0.31.2
 	github.com/sirupsen/logrus v1.9.3
 	github.com/vishvananda/netns v0.0.4
