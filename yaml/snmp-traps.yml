@@ -8,6 +8,7 @@ snmp-traps:
     start-order: 100
     failure-threshold: 10
     failure-action: 'wait=60'
+    config-delivery-format: json
     yang-modules:
         names: 
             - "snmp-traps"
