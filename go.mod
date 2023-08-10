@@ -8,7 +8,7 @@ require (
 	github.com/karimra/srl-ndk-demo v0.1.1
 	github.com/nokia/srlinux-ndk-go v0.1.1
 	github.com/openconfig/gnmi v0.10.0
-	github.com/openconfig/gnmic v0.31.2
+	github.com/openconfig/gnmic v0.31.7
 	github.com/sirupsen/logrus v1.9.3
 	github.com/vishvananda/netns v0.0.4
 	golang.org/x/sync v0.3.0
@@ -57,7 +57,7 @@ require (
 	github.com/dustin/gojson v0.0.0-20160307161227-2e71ec9dd5ad // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fatih/color v1.14.1 // indirect
-	github.com/frankban/quicktest v1.14.3 // indirect
+	github.com/frankban/quicktest v1.14.4 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.3.1 // indirect
 	github.com/go-git/go-git/v5 v5.4.2 // indirect
@@ -107,10 +107,9 @@ require (
 	github.com/karimra/go-map-flattener v0.0.1 // indirect
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
 	github.com/kr/fs v0.1.0 // indirect
-	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
-	github.com/miekg/dns v1.1.50 // indirect
+	github.com/miekg/dns v1.1.54 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
@@ -121,10 +120,12 @@ require (
 	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/sftp v1.13.5 // indirect
+	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/rs/zerolog v1.29.0 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/spf13/afero v1.9.5 // indirect
+	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/xanzy/ssh-agent v0.3.1 // indirect
 	github.com/zealic/xignore v0.3.3 // indirect
