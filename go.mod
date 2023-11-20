@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/gosnmp/gosnmp v1.36.1
 	github.com/itchyny/gojq v0.12.13
-	github.com/karimra/srl-ndk-demo v0.1.1
+	github.com/karimra/srl-ndk-demo v0.1.2
 	github.com/nokia/srlinux-ndk-go v0.1.1
 	github.com/openconfig/gnmi v0.10.0
 	github.com/openconfig/gnmic v0.33.0
@@ -51,7 +51,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sso v1.11.7 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.16.6 // indirect
 	github.com/aws/smithy-go v1.11.2 // indirect
-	github.com/bufbuild/protocompile v0.5.1 // indirect
+	github.com/bufbuild/protocompile v0.6.0 // indirect
 	github.com/cenkalti/backoff/v3 v3.2.2 // indirect
 	github.com/docker/libkv v0.2.2-0.20180912205406-458977154600 // indirect
 	github.com/dustin/gojson v0.0.0-20160307161227-2e71ec9dd5ad // indirect
@@ -99,7 +99,7 @@ require (
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/itchyny/timefmt-go v0.1.5 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
-	github.com/jhump/protoreflect v1.15.1 // indirect
+	github.com/jhump/protoreflect v1.15.3 // indirect
 	github.com/jlaffaye/ftp v0.2.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
@@ -115,7 +115,11 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/oklog/run v1.1.0 // indirect
-	github.com/openconfig/grpctunnel v0.0.0-20220819142823-6f5422b8ca70 // indirect
+	github.com/openconfig/gnmic/pkg/path v0.1.1 // indirect
+	github.com/openconfig/gnmic/pkg/target v0.1.1 // indirect
+	github.com/openconfig/gnmic/pkg/types v0.1.1 // indirect
+	github.com/openconfig/gnmic/pkg/utils v0.1.0 // indirect
+	github.com/openconfig/grpctunnel v0.1.0 // indirect
 	github.com/pierrec/lz4 v2.6.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pkg/sftp v1.13.6 // indirect
@@ -133,12 +137,12 @@ require (
 	go4.org/intern v0.0.0-20230205224052-192e9f60865c // indirect
 	go4.org/unsafe/assume-no-moving-gc v0.0.0-20230525183740-e7c30c78aeb2 // indirect
 	gocloud.dev v0.25.1-0.20220408200107-09b10f7359f7 // indirect
-	golang.org/x/crypto v0.13.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/exp v0.0.0-20230626212559-97b1e661b5df // indirect
 	golang.org/x/mod v0.11.0 // indirect
-	golang.org/x/net v0.15.0 // indirect
-	golang.org/x/oauth2 v0.12.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
+	golang.org/x/oauth2 v0.13.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.10.0 // indirect
