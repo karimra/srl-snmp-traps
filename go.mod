@@ -3,7 +3,7 @@ module github.com/karimra/srl-snmp-traps
 go 1.20
 
 require (
-	github.com/gosnmp/gosnmp v1.36.1
+	github.com/gosnmp/gosnmp v1.37.0
 	github.com/itchyny/gojq v0.12.13
 	github.com/karimra/srl-ndk-demo v0.1.1
 	github.com/nokia/srlinux-ndk-go v0.1.1
@@ -138,7 +138,7 @@ require (
 	golang.org/x/mod v0.11.0 // indirect
 	golang.org/x/net v0.15.0 // indirect
 	golang.org/x/oauth2 v0.12.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.10.0 // indirect
