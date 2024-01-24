@@ -6,7 +6,7 @@ require (
 	github.com/gosnmp/gosnmp v1.36.1
 	github.com/itchyny/gojq v0.12.13
 	github.com/karimra/srl-ndk-demo v0.1.1
-	github.com/nokia/srlinux-ndk-go v0.1.1
+	github.com/nokia/srlinux-ndk-go v0.2.0
 	github.com/openconfig/gnmi v0.10.0
 	github.com/openconfig/gnmic v0.33.0
 	github.com/sirupsen/logrus v1.9.3
