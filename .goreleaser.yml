@@ -42,6 +42,7 @@ nfpms:
     description: "SR Linux SNMP Traps"
     formats:
       - rpm
+      - deb
     license: "BSD 2"
     bindir: /usr/local/bin/
     contents:

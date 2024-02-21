@@ -1,6 +1,8 @@
 updates:
-  - path: /system/gnmi-server/unix-socket/
+  - path: /system/gnmi-server/unix-socket
     encoding: json_ietf
-    value: 
+    value:
       admin-state: enable
       use-authentication: false
+      services:
+        - gnmi

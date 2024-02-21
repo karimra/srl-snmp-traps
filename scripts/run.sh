@@ -9,6 +9,8 @@ cd ..
 lab_name=traps
 sudo clab deploy -t lab/$lab_name.clab.yaml -c
 
+sleep 5
+
 ./scripts/install.sh
 
 sleep 5

@@ -1,7 +1,7 @@
 snmp-traps:
     run-as-user: root
     path: /usr/local/bin/
-    launch-command: ./srl-snmp-traps -d 
+    launch-command: ./srl-snmp-traps
     search-command: ./srl-snmp-traps
     version-command: /usr/local/bin/srl-snmp-traps -v
     wait-for-config: Yes

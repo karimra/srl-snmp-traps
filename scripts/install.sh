@@ -14,10 +14,11 @@ gnmic_cmd="gnmic -u $username -p $password --skip-verify"
 
 ${gnmic_cmd} -a ${srl_nodes} set --request-file lab/prereq_config.yaml
 
-
 clab_exec_labels="--label containerlab=$lab_name --label clab-node-kind=srl"
-# install the RPM located in /tmp/rpm
-sudo clab exec --topo lab/$lab_name.clab.yaml $clab_exec_labels --cmd "sudo rpm -U /tmp/rpm/*rpm"
+
+# install the deb file located in /tmp/pkg
+sudo clab exec --topo lab/$lab_name.clab.yaml $clab_exec_labels --cmd "ls -l /tmp/pkg"
+sudo clab exec --topo lab/$lab_name.clab.yaml $clab_exec_labels --cmd "sudo dpkg -i /tmp/pkg/srl-snmp-traps_v0.0.2_Linux_x86_64.deb"
 sleep 1
 
 # reload the app manager so it picks up the newly installed app
