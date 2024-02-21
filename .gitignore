@@ -1,5 +1,6 @@
 clab-*
 lab/.*
 lab/rpm
+lab/pkg
 builds
 dist/

@@ -1,6 +1,6 @@
 # SRL-SNMP-TRAPS
 
-### configuration
+## configuration
 
 CLI:
 
@@ -8,33 +8,15 @@ CLI:
 enter candidate
 system gnmi-server unix-socket admin-state enable
 system gnmi-server unix-socket use-authentication false
+system gnmi-server unix-socket services [ gnmi ]
 
-system snmp-traps destination 10.0.0.1:161 admin-state enable
-system snmp-traps destination 10.0.0.1:161 community private
-system snmp-traps destination 10.0.0.1:161 network-instance mgmt
+system snmp-traps destination 10.0.0.1:162 admin-state enable
+system snmp-traps destination 10.0.0.1:162 community private
+system snmp-traps destination 10.0.0.1:162 network-instance mgmt
 commit now
 ```
 
-gNMI:
-
-```bash
-dest_addr=10.0.0.1:161
-gnmic -a clab-traps-srl1 -u admin -p NokiaSrl1! --skip-verify \
-    -e json_ietf \
-    set \
-    --update-path /system/gnmi-server/unix-socket/admin-state \
-    --update-value enable \
-    --update-path /system/gnmi-server/unix-socket/use-authentication \
-    --update-value false \
-    --update-path /system/snmp-traps/destination[address=${dest_addr}]/admin-state \
-    --update-value enable \
-    --update-path /system/snmp-traps/destination[address=${dest_addr}]/community \
-    --update-value private \
-    --update-path /system/snmp-traps/destination[address=${dest_addr}]/network-instance \
-    --update-value mgmt
-```
-
-### traps definition
+## traps definition
 
 Trap definitions are YAML files located under `/opt/snmp-traps/traps`
 

@@ -6,6 +6,6 @@ cd $SCRIPTPATH/..
 mkdir -p builds
 
 GOOS=linux GOARCH=amd64 go build -o builds/srl-snmp-traps
-nfpm pkg --packager rpm --target builds/
+nfpm pkg --packager deb --target builds/
 
-cp builds/*rpm lab/rpm/
+cp builds/*deb lab/pkg/
